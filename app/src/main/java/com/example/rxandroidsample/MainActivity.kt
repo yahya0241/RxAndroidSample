@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        observeRemoteDataWithReactiveStream(viewModel)
-        observeRemoteDataWithFuture(viewModel)
+//        observeRemoteDataWithReactiveStream(viewModel)
+//        observeRemoteDataWithFuture(viewModel)
 
         filterList()
 //        createFlowable()
@@ -95,13 +95,20 @@ class MainActivity : AppCompatActivity() {
             .fromIterable(DataSource.createTaskList())//fromArray fromCallable -> for database transaction
             .filter(object : Predicate<Task> {
                 override fun test(t: Task): Boolean {
-                    return t.description == "Make dinner"
+                    return t.isComplete
                 }
 
             })
             .distinct(object : Function<Task, Task> {
                 override fun apply(t: Task): Task {
                     return t //filter tasks based on equals method. we can filter based on one field
+                }
+
+            })
+            .take(2)
+            .takeWhile(object : Predicate<Task>{
+                override fun test(t: Task): Boolean {
+                    return t.isComplete
                 }
 
             })
