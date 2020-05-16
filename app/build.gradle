@@ -60,4 +60,8 @@ dependencies {
     // for covert flowable to live data and vic versa.
     def reactivestreams_version = "1.1.1"
     implementation "android.arch.lifecycle:reactivestreams:$reactivestreams_version"
+
+    // Rx Binding Library
+    def rxbinding_version = "3.1.0"
+    implementation "com.jakewharton.rxbinding3:rxbinding:$rxbinding_version"
 }

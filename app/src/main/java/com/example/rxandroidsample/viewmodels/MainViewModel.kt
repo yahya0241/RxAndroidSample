@@ -17,4 +17,8 @@ class MainViewModel() : ViewModel() {
     public fun makeQuery():LiveData<ResponseBody>{
         return repository.makeReactiveQuery()
     }
+
+    public fun getUsers():Observable<ResponseBody>{
+        return repository.getUsers()
+    }
 }

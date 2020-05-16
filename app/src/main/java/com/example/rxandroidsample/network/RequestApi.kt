@@ -13,4 +13,7 @@ interface RequestApi {
 
     @GET("todos/2")
     fun makeQuery(): Flowable<ResponseBody>
+
+    @GET("/users/1")
+    fun getUsers():Observable<ResponseBody>
 }

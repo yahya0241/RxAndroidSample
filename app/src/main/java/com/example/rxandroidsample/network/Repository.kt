@@ -25,6 +25,9 @@ class Repository {
     fun makeReactiveQuery():LiveData<ResponseBody>{
         return LiveDataReactiveStreams.fromPublisher(ServiceGen.getRequestApi()!!.makeQuery().subscribeOn(Schedulers.io()))
     }
+    fun getUsers():Observable<ResponseBody>{
+        return ServiceGen.getRequestApi()!!.getUsers().subscribeOn(Schedulers.io())
+    }
 
     fun makeFutureQuery(): Future<Observable<ResponseBody>> {
         val executor = Executors.newSingleThreadExecutor()

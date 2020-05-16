@@ -1,11 +1,14 @@
 package com.example.rxandroidsample
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.example.rxandroidsample.model.Task
 import com.example.rxandroidsample.viewmodels.MainViewModel
+import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -34,12 +37,44 @@ class MainActivity : AppCompatActivity() {
 //        observeRemoteDataWithFuture(viewModel)
 
         filterList()
+        testBufferOperator()
 //        createFlowable()
 //        createSingleObservable()
 //        justObservableTest()
 //        rangeRepeatObservableTest()
 //        intervalObservableTest()
 //        timerObservableTest()
+    }
+
+    @SuppressLint("CheckResult")
+    private fun testBufferOperator() {
+
+        findViewById<Button>(R.id.button).clicks()
+            .map(object : Function<Unit, Int> {
+                override fun apply(t: Unit): Int {
+                    return 1
+                }
+
+            })
+            .buffer(4, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<List<Int>> {
+                override fun onSubscribe(d: Disposable) {
+                    disposable.add(d) // add to disposables to you can clear in onDestroy
+
+                }
+
+                override fun onNext(t: List<Int>) {
+                    Log.d(
+                        TAG,
+                        "onNext: You clicked " + t.size + " times in 4 seconds!"
+                    )
+                }
+
+                override fun onError(e: Throwable) {}
+                override fun onComplete() {}
+
+            })
     }
 
     private fun observeRemoteDataWithFuture(viewModel: MainViewModel) {
@@ -78,18 +113,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeRemoteDataWithReactiveStream(viewModel: MainViewModel) {
-        viewModel.makeQuery().observe(this,
-            androidx.lifecycle.Observer { responseBody ->
-                Log.d(TAG, "onChanged: this is a live data response!")
-                try {
-                    Log.d(TAG, "onChanged: " + responseBody.string())
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            })
+         viewModel.makeQuery().observe(this,
+             androidx.lifecycle.Observer { responseBody ->
+                 Log.d(TAG, "onChanged: this is a live data response!")
+                 try {
+                     Log.d(TAG, "onChanged: " + responseBody.string())
+                 } catch (e: IOException) {
+                     e.printStackTrace()
+                 }
+             })
+
     }
 
-    private fun filterList(): Observable<Task>? {
+    private fun filterList() {
 
         val taskObservable = Observable
             .fromIterable(DataSource.createTaskList())//fromArray fromCallable -> for database transaction
@@ -105,19 +141,26 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
-            .take(2)
-            .takeWhile(object : Predicate<Task>{
+            .take(3)
+            .takeWhile(object : Predicate<Task> {
                 override fun test(t: Task): Boolean {
                     return t.isComplete
                 }
 
             })
+            .map(object : Function<Task, String> {
+                override fun apply(t: Task): String {
+                    return t.description
+                }
+
+            })
+            .buffer(2)
             //.subscribeOn(Schedulers.newThread())
             .subscribeOn(Schedulers.io()) //run on background thread.
             .observeOn(AndroidSchedulers.mainThread())
 
 
-        taskObservable.subscribe(object : Observer<Task> {
+        taskObservable.subscribe(object : Observer<List<String>> {
             override fun onComplete() {
                 Log.d(TAG, "onComplete called.")
             }
@@ -128,9 +171,11 @@ class MainActivity : AppCompatActivity() {
 
             }
 
-            override fun onNext(t: Task) {
+            override fun onNext(strings: List<String>) {
                 Log.d(TAG, "onNext: " + Thread.currentThread().name)
-                Log.d(TAG, "onNext: " + t.description)
+                for (s in strings) {
+                    Log.d(TAG, "onNext: $s")
+                }
             }
 
             override fun onError(e: Throwable) {
@@ -140,8 +185,6 @@ class MainActivity : AppCompatActivity() {
 
         })
 //        val flowable = taskObservable.toFlowable(BackpressureStrategy.BUFFER)
-        return taskObservable
-
     }
 
     private fun timerObservableTest() {
