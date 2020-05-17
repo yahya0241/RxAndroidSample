@@ -1,14 +1,13 @@
 package com.example.rxandroidsample
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProviders
 import com.example.rxandroidsample.model.Task
 import com.example.rxandroidsample.viewmodels.MainViewModel
-import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -30,6 +29,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val searchView = findViewById<SearchView>(R.id.search)
+        SearchViewObserver(searchView)
+        val bufferBtn = findViewById<Button>(R.id.buffer)
+        val throttleBtn = findViewById<Button>(R.id.throttle)
+        ButtonObserver(bufferBtn, throttleBtn)
 
         val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
@@ -37,7 +41,6 @@ class MainActivity : AppCompatActivity() {
 //        observeRemoteDataWithFuture(viewModel)
 
         filterList()
-        testBufferOperator()
 //        createFlowable()
 //        createSingleObservable()
 //        justObservableTest()
@@ -46,36 +49,6 @@ class MainActivity : AppCompatActivity() {
 //        timerObservableTest()
     }
 
-    @SuppressLint("CheckResult")
-    private fun testBufferOperator() {
-
-        findViewById<Button>(R.id.button).clicks()
-            .map(object : Function<Unit, Int> {
-                override fun apply(t: Unit): Int {
-                    return 1
-                }
-
-            })
-            .buffer(4, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<List<Int>> {
-                override fun onSubscribe(d: Disposable) {
-                    disposable.add(d) // add to disposables to you can clear in onDestroy
-
-                }
-
-                override fun onNext(t: List<Int>) {
-                    Log.d(
-                        TAG,
-                        "onNext: You clicked " + t.size + " times in 4 seconds!"
-                    )
-                }
-
-                override fun onError(e: Throwable) {}
-                override fun onComplete() {}
-
-            })
-    }
 
     private fun observeRemoteDataWithFuture(viewModel: MainViewModel) {
         try {
