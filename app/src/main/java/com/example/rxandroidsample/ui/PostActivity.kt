@@ -34,36 +34,47 @@ class PostActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recycler_view)
         initRecyclerView()
 
-        getPostObservables()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .flatMap(object : Function<Post, ObservableSource<Post>> {
-                override fun apply(post: Post): ObservableSource<Post> {
-                    return getCommentObservable(post)
-                }
-
-            })
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Post> {
-
-                override fun onSubscribe(d: Disposable) {
-                    disposable.add(d)
-                }
-
-                override fun onNext(post: Post) {
-                    updatePost(post)
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.e(TAG, "onError: ", e);
-                }
-
-                override fun onComplete() {
-                }
-
-            })
+        val inOrder = true
+        fetchData(inOrder)
 
 
+    }
+
+    private fun fetchData(inOrder: Boolean) {
+        var postObservables = getPostObservables()
+        postObservables = postObservables.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            if (inOrder){
+                postObservables = postObservables.concatMap(object  : Function<Post, ObservableSource<Post>>{
+                    override fun apply(post: Post): ObservableSource<Post> {
+                        return getCommentObservable(post)
+                    }
+
+                })
+            }else {
+                postObservables = postObservables.flatMap(object : Function<Post, ObservableSource<Post>> {
+                        override fun apply(post: Post): ObservableSource<Post> {
+                            return getCommentObservable(post)
+                        }
+
+                    })
+            }
+        postObservables.subscribe(object : Observer<Post> {
+            override fun onSubscribe(d: Disposable) {
+                disposable.add(d)
+            }
+
+            override fun onNext(post: Post) {
+                updatePost(post)
+            }
+
+            override fun onError(e: Throwable) {
+                Log.e(TAG, "onError: ", e);
+            }
+
+            override fun onComplete() {
+            }
+
+        })
     }
 
     private fun getPostObservables(): Observable<Post> {
@@ -100,37 +111,9 @@ class PostActivity : AppCompatActivity() {
 
 
     private fun updatePost(post: Post) {
-        recyclerAdapter.updatePost(post);
-        /* Observable
-             .fromIterable(recyclerAdapter.getPosts())
-             .filter(object : Predicate<Post>{
-                 override fun test(t: Post): Boolean {
-                     return t.id == post.id
-                 }
-
-             })
-             .observeOn(AndroidSchedulers.mainThread())
-             .subscribe(object : Observer<Post> {
-                 override fun onSubscribe(d: Disposable) {
-                     disposable.add(d)
-                 }
-
-                 override fun onNext(post: Post) {
-                     Log.d(
-                         TAG,
-                         "onNext: updating post: " + post.id + ", thread: " + Thread.currentThread()
-                             .name
-                     )
-                     recyclerAdapter.updatePost(post)
-                     recyclerAdapter.notifyDataSetChanged()
-                 }
-
-                 override fun onError(e: Throwable) {
-                     Log.e(TAG, "onError: ", e)
-                 }
-
-                 override fun onComplete() {}
-             })*/
+        if (!recyclerView.isComputingLayout) {
+            recyclerAdapter.updatePost(post);
+        }
     }
 
     private fun initRecyclerView() {

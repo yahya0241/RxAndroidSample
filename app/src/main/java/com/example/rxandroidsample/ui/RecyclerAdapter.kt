@@ -1,5 +1,6 @@
 package com.example.rxandroidsample.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
         fun bind(post: Post) {
             this.title?.text = post.title
             if (post.comments != null) {
+                Log.d("TAG", post.comments!![0].toString())
                 showProgressBar(false)
                 this.numComments?.text = post.comments!!.size.toString()
             } else {
