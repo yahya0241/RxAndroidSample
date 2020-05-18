@@ -3,4 +3,6 @@
     <string name="button">Button</string>
     <string name="buffer">Buffer clicks</string>
     <string name="throttle">Throttle Clicks</string>
+    <string name="get_posts">get posts</string>
+    <string name="title_t">this is a title</string>
 </resources>

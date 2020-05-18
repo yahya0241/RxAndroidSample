@@ -1,11 +1,13 @@
-package com.example.rxandroidsample
+package com.example.rxandroidsample.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProviders
+import com.example.rxandroidsample.*
 import com.example.rxandroidsample.model.Task
 import com.example.rxandroidsample.viewmodels.MainViewModel
 import io.reactivex.*
@@ -31,6 +33,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val searchView = findViewById<SearchView>(R.id.search)
         SearchViewObserver(searchView)
+
+        val postButton = findViewById<Button>(R.id.posts)
+        postButton.setOnClickListener {
+            startActivity(Intent(this, PostActivity::class.java))
+//            finish()
+        }
+
         val bufferBtn = findViewById<Button>(R.id.buffer)
         val throttleBtn = findViewById<Button>(R.id.throttle)
         ButtonObserver(bufferBtn, throttleBtn)
