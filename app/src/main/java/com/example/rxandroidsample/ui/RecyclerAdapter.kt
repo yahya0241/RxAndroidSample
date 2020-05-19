@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rxandroidsample.R
 import com.example.rxandroidsample.model.Post
-import java.util.ArrayList
+import java.util.*
 
 
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
@@ -18,7 +18,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
     private var posts = ArrayList<Post>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_post_list_item, null)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.flat_map_post_list_item, null)
         return MyViewHolder(view)
     }
 
@@ -34,10 +35,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
         return posts
     }
 
-    fun updatePost(post: Post){
+    fun updatePost(post: Post) {
         posts[posts.indexOf(post)] = post;
         notifyItemChanged(posts.indexOf(post));
     }
+
     fun setPosts(posts: ArrayList<Post>) {
         this.posts = posts
     }
@@ -45,12 +47,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
     class MyViewHolder : RecyclerView.ViewHolder {
         var title: TextView? = null
         var numComments: TextView? = null
-        lateinit var progressBar: ProgressBar
+        var progressBar: ProgressBar
 
         constructor(itemView: View) : super(itemView) {
             this.title = itemView.findViewById(R.id.title)
             this.numComments = itemView.findViewById(R.id.num_comments)
-            this.progressBar = itemView.findViewById(R.id.progress_bar)
+            this.progressBar = itemView.findViewById(R.id.flat_map_pb)
         }
 
         fun bind(post: Post) {
@@ -72,6 +74,5 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
                 this.progressBar.visibility = View.GONE
             }
         }
-
     }
 }

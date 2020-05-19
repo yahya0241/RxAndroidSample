@@ -28,6 +28,7 @@ class Post {
 
     public var comments: List<Comment>? = null
 
+
     constructor(userId: Int,
         id: Int,
         title: String?,
@@ -39,5 +40,9 @@ class Post {
         this.title = title
         this.body = body
         this.comments = comments
+    }
+
+    override fun toString(): String {
+        return "Post(userId=$userId, id=$id, title=$title, body=$body, comments=$comments)"
     }
 }

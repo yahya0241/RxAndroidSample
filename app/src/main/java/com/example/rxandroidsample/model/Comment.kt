@@ -38,4 +38,8 @@ class Comment{
         this.email = email
         this.body = body
     }
+
+    override fun toString(): String {
+        return "Comment(postId=$postId, id=$id, name=$name, email=$email, body=$body)"
+    }
 }

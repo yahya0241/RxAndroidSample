@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 
-class PostActivity : AppCompatActivity() {
+class FlatMapPostActivity : AppCompatActivity() {
     private val TAG = "PostActivity"
 
     lateinit var recyclerView: RecyclerView
@@ -29,35 +29,33 @@ class PostActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post)
+        setContentView(R.layout.activity_post_flatmap)
 
         recyclerView = findViewById(R.id.recycler_view)
         initRecyclerView()
 
         val inOrder = true
         fetchData(inOrder)
-
-
     }
 
     private fun fetchData(inOrder: Boolean) {
         var postObservables = getPostObservables()
         postObservables = postObservables.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            if (inOrder){
-                postObservables = postObservables.concatMap(object  : Function<Post, ObservableSource<Post>>{
-                    override fun apply(post: Post): ObservableSource<Post> {
-                        return getCommentObservable(post)
-                    }
+        postObservables = if (inOrder){
+            postObservables.concatMap(object  : Function<Post, ObservableSource<Post>>{
+                override fun apply(post: Post): ObservableSource<Post> {
+                    return getCommentObservable(post)
+                }
 
-                })
-            }else {
-                postObservables = postObservables.flatMap(object : Function<Post, ObservableSource<Post>> {
-                        override fun apply(post: Post): ObservableSource<Post> {
-                            return getCommentObservable(post)
-                        }
+            })
+        }else {
+            postObservables.flatMap(object : Function<Post, ObservableSource<Post>> {
+                override fun apply(post: Post): ObservableSource<Post> {
+                    return getCommentObservable(post)
+                }
 
-                    })
-            }
+            })
+        }
         postObservables.subscribe(object : Observer<Post> {
             override fun onSubscribe(d: Disposable) {
                 disposable.add(d)

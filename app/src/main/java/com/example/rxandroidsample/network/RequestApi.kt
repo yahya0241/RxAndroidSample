@@ -23,6 +23,9 @@ interface RequestApi {
     @GET("posts")
     fun getPosts():Observable<List<Post>>
 
+    @GET("/posts/{id}")
+    fun getPost(@Path("id") id :Int):Observable<Post>
+
     @GET("posts/{id}/comments")
     fun getComments(@Path("id") id: Int):Observable<List<Comment>>
 }

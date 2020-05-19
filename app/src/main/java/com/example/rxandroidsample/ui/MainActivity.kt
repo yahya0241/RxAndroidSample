@@ -9,6 +9,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProviders
 import com.example.rxandroidsample.*
 import com.example.rxandroidsample.model.Task
+import com.example.rxandroidsample.ui.switchmap.SwitchMapPostActivity
+import com.example.rxandroidsample.ui.switchmap.SwitchMapRecyclerAdapter
 import com.example.rxandroidsample.viewmodels.MainViewModel
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -36,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         val postButton = findViewById<Button>(R.id.posts)
         postButton.setOnClickListener {
-            startActivity(Intent(this, PostActivity::class.java))
+            startActivity(Intent(this, SwitchMapPostActivity::class.java))
 //            finish()
         }
 
