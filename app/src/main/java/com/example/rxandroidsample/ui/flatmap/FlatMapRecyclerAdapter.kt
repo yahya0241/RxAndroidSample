@@ -1,4 +1,4 @@
-package com.example.rxandroidsample.ui
+package com.example.rxandroidsample.ui.flatmap
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,15 +12,17 @@ import com.example.rxandroidsample.model.Post
 import java.util.*
 
 
-class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
+class FlatMapRecyclerAdapter : RecyclerView.Adapter<FlatMapRecyclerAdapter.MyViewHolder>() {
 
     private val TAG = "RecyclerAdapter"
     private var posts = ArrayList<Post>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.flat_map_post_list_item, null)
-        return MyViewHolder(view)
+            LayoutInflater.from(parent.context).inflate(R.layout.flat_map_item, null)
+        return MyViewHolder(
+            view
+        )
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {

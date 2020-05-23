@@ -5,4 +5,13 @@
     <string name="throttle">Throttle Clicks</string>
     <string name="get_posts">get posts</string>
     <string name="title_t">this is a title</string>
+    <string name="fragment_flat_map">Flat Map</string>
+    <string name="fragment_switch">Switch Map</string>
+    <string name="flat_map">Flat Map</string>
+    <string name="switch_map">Switch Map</string>
+    <string name="search_label">Search</string>
+    <string name="liveData_reactiveStream">download data with reactive stream and handel with live date</string>
+    <string name="liveData_future">download data with Future class and handel result with live data</string>
+    <string name="liveData">Live Date</string>
+    <string name="liveData_label">LiveData</string>
 </resources>

@@ -1,16 +1,19 @@
 package com.example.rxandroidsample.ui.switchmap
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rxandroidsample.R
 import com.example.rxandroidsample.model.Post
 import com.example.rxandroidsample.network.ServiceGen
+import com.example.rxandroidsample.ui.VerticalSpaceItemDecoration
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.Observer
@@ -21,13 +24,11 @@ import io.reactivex.functions.Function
 import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import java.util.ArrayList
+import java.util.*
 import java.util.concurrent.TimeUnit
-import android.content.Intent
-import com.example.rxandroidsample.ui.FlatMapPostActivity
 
 
-class SwitchMapPostActivity : AppCompatActivity(), SwitchMapRecyclerAdapter.OnPostClickListener {
+class SwitchMapPostActivity : Fragment(), SwitchMapRecyclerAdapter.OnPostClickListener {
 
     val TAG = "SwitchMapPostActivity"
 
@@ -41,11 +42,18 @@ class SwitchMapPostActivity : AppCompatActivity(), SwitchMapRecyclerAdapter.OnPo
     private val publishSubject = PublishSubject.create<Post>()
     val PERIOD = 100
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post_switchmap)
-        recyclerView = findViewById(R.id.recycler_view_switch_map)
-        progressBar = findViewById(R.id.switch_map_pb)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_switchmap, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerView = view.findViewById(R.id.recycler_view_switch_map)
+        progressBar = view.findViewById(R.id.switch_map_pb)
 
         initRecyclerView()
         retrievePosts()
@@ -135,12 +143,13 @@ class SwitchMapPostActivity : AppCompatActivity(), SwitchMapRecyclerAdapter.OnPo
 
     private fun initRecyclerView() {
         adapter = SwitchMapRecyclerAdapter(this)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.addItemDecoration(VerticalSpaceItemDecoration(15))
         recyclerView.adapter = adapter
     }
 
     fun navDialogView(post: Post) {
-        val dialogBuilder = AlertDialog.Builder(this@SwitchMapPostActivity)
+        val dialogBuilder = AlertDialog.Builder(activity!!)
 
         dialogBuilder.setTitle(post.id.toString())
         dialogBuilder.setMessage(post.title.toString())
@@ -150,6 +159,7 @@ class SwitchMapPostActivity : AppCompatActivity(), SwitchMapRecyclerAdapter.OnPo
         }
         val b = dialogBuilder.create()
         b.show()
+
     }
 
     override fun onResume() {

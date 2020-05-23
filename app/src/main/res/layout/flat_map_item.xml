@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="100"
+    android:background="#fff"
     android:padding="20dp">
 
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="80"
+        android:background="#fff"
         android:layout_gravity="center_vertical" >
 
 
@@ -30,6 +32,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="20"
+        android:background="#fff"
         android:layout_gravity="center_vertical">
 
         <TextView

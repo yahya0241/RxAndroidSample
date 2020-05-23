@@ -1,17 +1,20 @@
 package com.example.rxandroidsample.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProviders
-import com.example.rxandroidsample.*
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
+import com.example.rxandroidsample.DataSource
+import com.example.rxandroidsample.R
 import com.example.rxandroidsample.model.Task
-import com.example.rxandroidsample.ui.switchmap.SwitchMapPostActivity
-import com.example.rxandroidsample.ui.switchmap.SwitchMapRecyclerAdapter
 import com.example.rxandroidsample.viewmodels.MainViewModel
+import com.google.android.material.navigation.NavigationView
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -26,30 +29,25 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private val TAG = "TAG"
     val disposable = CompositeDisposable()
-
+    private lateinit var navigationView: NavigationView
+    private lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val searchView = findViewById<SearchView>(R.id.search)
-        SearchViewObserver(searchView)
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
 
-        val postButton = findViewById<Button>(R.id.posts)
-        postButton.setOnClickListener {
-            startActivity(Intent(this, SwitchMapPostActivity::class.java))
-//            finish()
-        }
+        initNavigationView()
 
-        val bufferBtn = findViewById<Button>(R.id.buffer)
-        val throttleBtn = findViewById<Button>(R.id.throttle)
-        ButtonObserver(bufferBtn, throttleBtn)
+//        val bufferBtn = findViewById<Button>(R.id.buffer)
+//        val throttleBtn = findViewById<Button>(R.id.throttle)
+//        ButtonObserver(bufferBtn, throttleBtn)
 
         val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-//        observeRemoteDataWithReactiveStream(viewModel)
-//        observeRemoteDataWithFuture(viewModel)
 
         filterList()
 //        createFlowable()
@@ -60,54 +58,81 @@ class MainActivity : AppCompatActivity() {
 //        timerObservableTest()
     }
 
+    private fun initNavigationView() {
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+        NavigationUI.setupWithNavController(navigationView, navController)
+        navigationView.setNavigationItemSelectedListener(this)
+    }
 
-    private fun observeRemoteDataWithFuture(viewModel: MainViewModel) {
-        try {
-            viewModel.makeFutureQuery().get()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<ResponseBody> {
-                    override fun onComplete() {
-                        Log.d(TAG, "onComplete: called!")
-                    }
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.nav_flatMap -> {
+                val navOptions = NavOptions.Builder().setPopUpTo(R.id.main, true).build()
+                Navigation.findNavController(this, R.id.nav_host_fragment)
+                    .navigate(R.id.flatScreen, null, navOptions)
+            }
+            R.id.nav_switchMap -> {
+                if (isValidDestination(R.id.nav_switchMap)) {
+                    Navigation.findNavController(this, R.id.nav_host_fragment)
+                        .navigate(R.id.switchScreen)
+                }
+            }
+            R.id.nav_search -> {
+                if (isValidDestination(R.id.nav_search)) {
+                    Navigation.findNavController(this, R.id.nav_host_fragment)
+                        .navigate(R.id.searchScreen)
+                }
+            }
+            R.id.nav_livedata -> {
+                if (isValidDestination(R.id.nav_search)) {
+                    Navigation.findNavController(this, R.id.nav_host_fragment)
+                        .navigate(R.id.liveDataScreen)
+                }
+            }
+        }
+        menuItem.isChecked = true
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
 
-                    override fun onSubscribe(d: Disposable) {
-                        Log.e(TAG, "onSubscribe: called!")
-                    }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            android.R.id.home -> {
+                return if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
-                    override fun onNext(responseBody: ResponseBody) {
-                        Log.d(TAG, "onNext: get data from server")
-                        try {
-                            Log.d(TAG, "onNext: " + responseBody.string())
-                        } catch (e: IOException) {
-                            e.printStackTrace();
-                        }
-                    }
+    private fun isValidDestination(destination: Int): Boolean {
+        return destination != Navigation.findNavController(
+            this,
+            R.id.nav_host_fragment
+        ).currentDestination!!.id
+    }
 
-                    override fun onError(e: Throwable) {
-                        Log.e(TAG, "OnError: called!")
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(
+            Navigation.findNavController(this, R.id.nav_host_fragment),
+            drawerLayout
+        )
+    }
 
-                    }
-                })
-        } catch (e: ExecutionException) {
-            e.printStackTrace();
-        } catch (e: InterruptedException) {
-            e.printStackTrace();
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
         }
     }
 
-    private fun observeRemoteDataWithReactiveStream(viewModel: MainViewModel) {
-         viewModel.makeQuery().observe(this,
-             androidx.lifecycle.Observer { responseBody ->
-                 Log.d(TAG, "onChanged: this is a live data response!")
-                 try {
-                     Log.d(TAG, "onChanged: " + responseBody.string())
-                 } catch (e: IOException) {
-                     e.printStackTrace()
-                 }
-             })
 
-    }
 
     private fun filterList() {
 
@@ -345,4 +370,6 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         disposable.clear()
     }
+
+
 }

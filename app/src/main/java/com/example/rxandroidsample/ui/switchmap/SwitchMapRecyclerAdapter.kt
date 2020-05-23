@@ -20,7 +20,7 @@ class SwitchMapRecyclerAdapter(onPostClickListener: OnPostClickListener) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SwitchMapViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.switch_map_post_list_item, null)
+            LayoutInflater.from(parent.context).inflate(R.layout.switch_map_item, null)
         return SwitchMapViewHolder(view, onPostClickListener)
     }
 

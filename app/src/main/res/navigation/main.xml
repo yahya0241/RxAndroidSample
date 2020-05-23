@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@+id/flatScreen">
+
+    <fragment
+        android:id="@+id/flatScreen"
+        android:name="com.example.rxandroidsample.ui.flatmap.FlatMapFragment"
+        android:label="@string/fragment_flat_map"
+        tools:layout="@layout/fragment_flatmap"
+        />
+    <fragment
+        android:id="@+id/switchScreen"
+        android:name="com.example.rxandroidsample.ui.switchmap.SwitchMapPostActivity"
+        android:label="@string/fragment_switch"
+        tools:layout="@layout/fragment_switchmap"
+        />
+
+    <fragment
+        android:id="@+id/searchScreen"
+        android:name="com.example.rxandroidsample.ui.search.FragmentSearch"
+        tools:layout="@layout/fragment_search"
+        android:label="@string/search_label"
+        />
+    <fragment
+        android:id="@+id/liveDataScreen"
+        android:name="com.example.rxandroidsample.ui.FragmentLiveData"
+        tools:layout="@layout/fragment_livedata"
+        android:label="@string/liveData_label"
+        />
+
+</navigation>

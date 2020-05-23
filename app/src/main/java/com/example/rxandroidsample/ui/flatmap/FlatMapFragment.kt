@@ -1,14 +1,18 @@
-package com.example.rxandroidsample.ui
+package com.example.rxandroidsample.ui.flatmap
 
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rxandroidsample.R
 import com.example.rxandroidsample.model.Comment
 import com.example.rxandroidsample.model.Post
 import com.example.rxandroidsample.network.ServiceGen
+import com.example.rxandroidsample.ui.VerticalSpaceItemDecoration
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.Observer
@@ -20,18 +24,24 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 
-class FlatMapPostActivity : AppCompatActivity() {
+class FlatMapFragment : Fragment() {
     private val TAG = "PostActivity"
 
     lateinit var recyclerView: RecyclerView
     private val disposable = CompositeDisposable()
-    lateinit var recyclerAdapter: RecyclerAdapter
+    lateinit var recyclerAdapter: FlatMapRecyclerAdapter
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_flatmap, container, false)
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post_flatmap)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = findViewById(R.id.recycler_view)
+        recyclerView = view.findViewById(R.id.recycler_view)
         initRecyclerView()
 
         val inOrder = true
@@ -93,11 +103,11 @@ class FlatMapPostActivity : AppCompatActivity() {
 
     private fun getCommentObservable(post: Post): Observable<Post> {
         return ServiceGen.getRequestApi()!!
-            .getComments(post.id)
+            .getPostComments(post.id)
             .map(object : Function<List<Comment>, Post> {
                 override fun apply(comments: List<Comment>): Post {
                     val delay = (Random().nextInt(5) + 1) * 1000L
-                    Thread.sleep(delay)
+//                    Thread.sleep(delay)
                     post.comments = comments
                     return post
                 }
@@ -115,18 +125,15 @@ class FlatMapPostActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        recyclerAdapter = RecyclerAdapter()
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerAdapter =
+            FlatMapRecyclerAdapter()
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.addItemDecoration(VerticalSpaceItemDecoration(15))
         recyclerView.adapter = recyclerAdapter
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.clear()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
         disposable.clear()
     }
 }
