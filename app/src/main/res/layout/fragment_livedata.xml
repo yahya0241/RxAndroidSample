@@ -11,13 +11,15 @@
         android:clickable="false"
         android:freezesText="true"
         android:gravity="center_horizontal"
+        android:padding="15dp"
         android:text="@string/liveData_reactiveStream"
         android:textStyle="italic" />
 
     <TextView
         android:id="@+id/reactive_textView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:padding="15dp"
         android:layout_weight="1" />
 
     <TextView
@@ -26,6 +28,7 @@
         android:layout_height="wrap_content"
         android:clickable="false"
         android:freezesText="true"
+        android:padding="15dp"
         android:gravity="center_horizontal"
         android:text="@string/liveData_future"
         android:textStyle="italic" />
@@ -33,6 +36,7 @@
     <TextView
         android:id="@+id/future_textView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_height="0dp"
         android:layout_weight="1" />
 </LinearLayout>

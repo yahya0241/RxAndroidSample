@@ -14,22 +14,33 @@
         />
     <fragment
         android:id="@+id/switchScreen"
-        android:name="com.example.rxandroidsample.ui.switchmap.SwitchMapPostActivity"
+        android:name="com.example.rxandroidsample.ui.switchmap.SwitchMapFragment"
         android:label="@string/fragment_switch"
         tools:layout="@layout/fragment_switchmap"
         />
 
     <fragment
         android:id="@+id/searchScreen"
-        android:name="com.example.rxandroidsample.ui.search.FragmentSearch"
+        android:name="com.example.rxandroidsample.ui.search.SearchFragment"
         tools:layout="@layout/fragment_search"
         android:label="@string/search_label"
         />
     <fragment
         android:id="@+id/liveDataScreen"
-        android:name="com.example.rxandroidsample.ui.FragmentLiveData"
+        android:name="com.example.rxandroidsample.ui.livedata.LiveDataFragment"
         tools:layout="@layout/fragment_livedata"
         android:label="@string/liveData_label"
         />
+
+    <fragment
+        android:id="@+id/buffersScreen"
+        android:name="com.example.rxandroidsample.ui.buffer.FragmentBuffers"
+        tools:layout="@layout/fragment_buttons"
+        android:label="@string/Buffer"/>
+
+    <fragment android:id="@+id/filterScreen"
+        android:name="com.example.rxandroidsample.ui.filter.FilterFragment"
+        tools:layout="@layout/frament_filter"
+        android:label="@string/filter"/>
 
 </navigation>

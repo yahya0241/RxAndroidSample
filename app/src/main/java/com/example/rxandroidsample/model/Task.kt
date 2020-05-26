@@ -1,6 +1,9 @@
 package com.example.rxandroidsample.model
 
-class Task(var description :String, var isComplete: Boolean, var priority:Int) {
+import org.json.JSONObject
+
+
+class Task(var description: String, var isComplete: Boolean, var priority: Int) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -19,5 +22,13 @@ class Task(var description :String, var isComplete: Boolean, var priority:Int) {
         result = 31 * result + isComplete.hashCode()
         result = 31 * result + priority
         return result
+    }
+
+    override fun toString(): String {
+        val jObjectData = JSONObject()
+        jObjectData.put("description", description)
+        jObjectData.put("isComplete", isComplete)
+        jObjectData.put("priority", priority)
+        return jObjectData.toString(2)
     }
 }

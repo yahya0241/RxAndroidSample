@@ -28,7 +28,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class SwitchMapPostActivity : Fragment(), SwitchMapRecyclerAdapter.OnPostClickListener {
+class SwitchMapFragment : Fragment(), SwitchMapRecyclerAdapter.OnPostClickListener {
 
     val TAG = "SwitchMapPostActivity"
 
@@ -166,6 +166,11 @@ class SwitchMapPostActivity : Fragment(), SwitchMapRecyclerAdapter.OnPostClickLi
         super.onResume()
         progressBar.progress = 0
         initSwitchMapDemo()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 
     override fun onPause() {

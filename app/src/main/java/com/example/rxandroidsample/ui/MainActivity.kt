@@ -6,26 +6,18 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
-import com.example.rxandroidsample.DataSource
 import com.example.rxandroidsample.R
 import com.example.rxandroidsample.model.Task
-import com.example.rxandroidsample.viewmodels.MainViewModel
 import com.google.android.material.navigation.NavigationView
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Function
-import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
-import okhttp3.ResponseBody
 import org.reactivestreams.Subscription
-import java.io.IOException
-import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
 
@@ -42,14 +34,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         initNavigationView()
 
-//        val bufferBtn = findViewById<Button>(R.id.buffer)
-//        val throttleBtn = findViewById<Button>(R.id.throttle)
-//        ButtonObserver(bufferBtn, throttleBtn)
-
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
-
-        filterList()
+//        filterList()
 //        createFlowable()
 //        createSingleObservable()
 //        justObservableTest()
@@ -85,9 +70,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             R.id.nav_livedata -> {
-                if (isValidDestination(R.id.nav_search)) {
+                if (isValidDestination(R.id.nav_livedata)) {
                     Navigation.findNavController(this, R.id.nav_host_fragment)
                         .navigate(R.id.liveDataScreen)
+                }
+            }
+            R.id.nav_buffers -> {
+                if (isValidDestination(R.id.nav_buffers)) {
+                    Navigation.findNavController(this, R.id.nav_host_fragment)
+                        .navigate(R.id.buffersScreen)
+                }
+            }
+            R.id.nav_filter -> {
+                if (isValidDestination(R.id.nav_filter)) {
+                    Navigation.findNavController(this, R.id.nav_host_fragment)
+                        .navigate(R.id.filterScreen)
                 }
             }
         }
@@ -133,68 +130,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-
-    private fun filterList() {
-
-        val taskObservable = Observable
-            .fromIterable(DataSource.createTaskList())//fromArray fromCallable -> for database transaction
-            .filter(object : Predicate<Task> {
-                override fun test(t: Task): Boolean {
-                    return t.isComplete
-                }
-
-            })
-            .distinct(object : Function<Task, Task> {
-                override fun apply(t: Task): Task {
-                    return t //filter tasks based on equals method. we can filter based on one field
-                }
-
-            })
-            .take(3)
-            .takeWhile(object : Predicate<Task> {
-                override fun test(t: Task): Boolean {
-                    return t.isComplete
-                }
-
-            })
-            .map(object : Function<Task, String> {
-                override fun apply(t: Task): String {
-                    return t.description
-                }
-
-            })
-            .buffer(2)
-            //.subscribeOn(Schedulers.newThread())
-            .subscribeOn(Schedulers.io()) //run on background thread.
-            .observeOn(AndroidSchedulers.mainThread())
-
-
-        taskObservable.subscribe(object : Observer<List<String>> {
-            override fun onComplete() {
-                Log.d(TAG, "onComplete called.")
-            }
-
-            override fun onSubscribe(d: Disposable) {
-                disposable.add(d)
-                Log.d(TAG, "onSubscribe called.")
-
-            }
-
-            override fun onNext(strings: List<String>) {
-                Log.d(TAG, "onNext: " + Thread.currentThread().name)
-                for (s in strings) {
-                    Log.d(TAG, "onNext: $s")
-                }
-            }
-
-            override fun onError(e: Throwable) {
-                Log.d(TAG, "onError called.")
-
-            }
-
-        })
-//        val flowable = taskObservable.toFlowable(BackpressureStrategy.BUFFER)
-    }
 
     private fun timerObservableTest() {
         //The Timer operator creates an Observable that emits one particular item after a span of time that you specify.

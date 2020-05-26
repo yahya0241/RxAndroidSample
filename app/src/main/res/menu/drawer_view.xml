@@ -14,5 +14,11 @@
             />
         <item android:id="@+id/nav_livedata"
             android:title="@string/liveData"/>
+
+        <item android:id="@+id/nav_buffers"
+            android:title="@string/Buffer"/>
+
+        <item android:id="@+id/nav_filter"
+            android:title="@string/filter"/>
     </group>
 </menu>

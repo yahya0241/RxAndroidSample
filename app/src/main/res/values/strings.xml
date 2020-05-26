@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">RxAndroidSample</string>
-    <string name="button">Button</string>
+    <string name="Buffer">Buffer &amp; Throttle</string>
     <string name="buffer">Buffer clicks</string>
     <string name="throttle">Throttle Clicks</string>
     <string name="get_posts">get posts</string>
@@ -9,9 +9,16 @@
     <string name="fragment_switch">Switch Map</string>
     <string name="flat_map">Flat Map</string>
     <string name="switch_map">Switch Map</string>
-    <string name="search_label">Search</string>
+    <string name="search_label">Debounce</string>
     <string name="liveData_reactiveStream">download data with reactive stream and handel with live date</string>
     <string name="liveData_future">download data with Future class and handel result with live data</string>
-    <string name="liveData">Live Date</string>
-    <string name="liveData_label">LiveData</string>
+    <string name="liveData">Future &amp; ReactiveStream</string>
+    <string name="liveData_label">Future &amp; ReactiveStream</string>
+    <string name="filter">Filter</string>
+    <string name="filter_txt">filter</string>
+    <string name="distinct">distinct</string>
+    <string name="take">take</string>
+    <string name="take_while">takeWhile</string>
+    <string name="map">map</string>
+    <string name="buffer_task">buffer</string>
 </resources>

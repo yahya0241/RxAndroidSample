@@ -1,4 +1,4 @@
-package com.example.rxandroidsample.ui
+package com.example.rxandroidsample.ui.livedata
 
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +18,7 @@ import okhttp3.ResponseBody
 import java.io.IOException
 import java.util.concurrent.ExecutionException
 
-class FragmentLiveData : Fragment() {
+class LiveDataFragment : Fragment() {
     val TAG = "FragmentLiveData"
 
     lateinit var reactiveTextView: TextView
