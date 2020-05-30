@@ -20,21 +20,20 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function
 import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
 
 class FilterFragment : Fragment(), View.OnClickListener {
 
-    private lateinit var taskObservable: Observable<Task>
+    private var taskObservable: Observable<Task>? = null
     lateinit var listView: RecyclerView
     lateinit var adapter: FilterAdapter
     val disposable = CompositeDisposable()
-    lateinit var taskList : ArrayList<String>
+    var taskList = DataSource().getTaskList()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.frament_filter, container, false)
+        return inflater.inflate(R.layout.fragment_filter, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,7 +46,8 @@ class FilterFragment : Fragment(), View.OnClickListener {
             R.id.take_btn,
             R.id.take_while_btn,
             R.id.map_btn,
-            R.id.buffer_btn
+            R.id.buffer_btn,
+            R.id.tasks_btn
         )
         setOnClickListener(view, buttons)
     }
@@ -63,97 +63,200 @@ class FilterFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         adapter.clearData()
-        taskObservable = Observable
-            .fromIterable(DataSource.createTaskList())
-            //.subscribeOn(Schedulers.newThread()) //new Thread
-            .subscribeOn(Schedulers.io()) //run on background thread.
-            .observeOn(AndroidSchedulers.mainThread())
-        disposable.clear()
 
         when (v.id) {
+            R.id.tasks_btn -> {
+                adapter.addItem("This list contain all tasks, we apply above option on them.")
+                allTaskObservable()
+
+            }
             R.id.filter_btn -> {
-                taskObservable.filter(object : Predicate<Task> {
-                    override fun test(t: Task): Boolean {
-                        return t.isComplete
-                    }
-                })
-                observeTasks()
+                adapter.addItem("With filter() method you can filter task items based on features or other condition." +
+                        "we filter tasks if isComplete feature is true.")
+
+                filterObservable()
             }
             R.id.distinct_btn -> {
-                taskObservable.distinct(object : Function<Task, Task> {
-                    override fun apply(t: Task): Task {
-                        return t //filter tasks based on equals method. we can filter based on one field
-                    }
-                })
-                observeTasks()
+                adapter.addItem("Distinct task items based on features or 'equals()' method.")
+                distinctObservable()
             }
 
             R.id.take_btn -> {
-                taskObservable.take(3)
-                observeTasks()
+                adapter.addItem("With take() method you can take any number of item from items. filter based on items count.")
+                takeObservable()
             }
             R.id.take_while_btn -> {
-                taskObservable.takeWhile(object : Predicate<Task> {
-                    override fun test(t: Task): Boolean {
-                        return t.isComplete
-                    }
-                })
-                observeTasks()
+                adapter.addItem("With takeWhile() method you can take items while the condition is met.")
+                takeWhileObservable()
             }
             R.id.map_btn -> {
-                taskObservable.map(object : Function<Task, String> {
-                    override fun apply(t: Task): String {
-                        return t.description
-                    }
-                })
-                    .subscribe(object : Observer<String> {
-                        override fun onNext(s: String) {
-                            adapter.addItem(s)
-                        }
-
-                        override fun onSubscribe(d: Disposable) {
-                            disposable.add(d)
-                        }
-
-                        override fun onComplete() {}
-                        override fun onError(e: Throwable) {}
-                    })
+                adapter.addItem("With map() method you can map emitted items to any thing. convert it to another object, change features and so on.")
+                mapObservable()
             }
             R.id.buffer_btn -> {
-                taskObservable.buffer(2)
-                    .subscribe(object : Observer<List<Task>>{
-                        override fun onNext(list: List<Task>) {
-                            for (task in list) {
-                                adapter.addItem(task.toString())
-                            }
-                        }
-
-                        override fun onSubscribe(d: Disposable) {
-                            disposable.add(d)
-                        }
-
-                        override fun onComplete() {}
-                        override fun onError(e: Throwable) {}
-
-                    })
+                adapter.addItem("With buffer() method you can buffer emitted items. If you call buffer(2), then this pass item to observer in double categories.")
+                bufferObservable()
             }
         }
 
     }
 
-    private fun observeTasks() {
-        taskObservable.subscribe(object : Observer<Task> {
-            override fun onNext(task: Task) {
-                adapter.addItem(task.toString())
-            }
+    private fun allTaskObservable() {
+        Observable
+            .fromIterable(taskList)
+            .subscribeOn(Schedulers.io()) //run on background thread.
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Task> {
+                override fun onNext(task: Task) {
+                    adapter.addItem(task.toString())
+                }
 
-            override fun onSubscribe(d: Disposable) {
-                disposable.add(d)
-            }
+                override fun onSubscribe(d: Disposable) {
+                    disposable.add(d)
+                }
 
-            override fun onComplete() {}
-            override fun onError(e: Throwable) {}
-        })
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+            })
+    }
+
+    private fun filterObservable() {
+        Observable
+            .fromIterable(taskList)
+            .filter(object : Predicate<Task> {
+                override fun test(t: Task): Boolean {
+                    return t.isComplete
+                }
+            })
+            .subscribeOn(Schedulers.io()) //run on background thread.
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Task> {
+                override fun onNext(task: Task) {
+                    adapter.addItem(task.toString())
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    disposable.add(d)
+                }
+
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+            })
+    }
+
+    private fun distinctObservable() {
+        Observable
+            .fromIterable(taskList)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .distinct(object : Function<Task, Task> {
+                override fun apply(t: Task): Task {
+                    return t
+                }
+            })
+            .subscribe(object : Observer<Task> {
+                override fun onNext(task: Task) {
+                    adapter.addItem(task.toString())
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    disposable.add(d)
+                }
+
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+            })
+    }
+
+    private fun takeObservable() {
+        Observable
+            .fromIterable(taskList)
+            .take(3)
+            .subscribeOn(Schedulers.io()) //run on background thread.
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Task> {
+                override fun onNext(task: Task) {
+                    adapter.addItem(task.toString())
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    disposable.add(d)
+                }
+
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+            })
+    }
+
+    private fun takeWhileObservable() {
+        Observable
+            .fromIterable(taskList)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .takeWhile(object : Predicate<Task> {
+                override fun test(t: Task): Boolean {
+                    return t.taskId != 5
+                }
+            })
+            .subscribe(object : Observer<Task> {
+                override fun onNext(task: Task) {
+                    adapter.addItem(task.toString())
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    disposable.add(d)
+                }
+
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+            })
+    }
+
+    private fun mapObservable() {
+        Observable
+            .fromIterable(taskList)
+            .map(object : Function<Task, String> {
+                override fun apply(t: Task): String {
+                    return t.description
+                }
+            })
+            .subscribeOn(Schedulers.io()) //run on background thread.
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<String> {
+                override fun onNext(s: String) {
+                    adapter.addItem(s)
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    disposable.add(d)
+                }
+
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+            })
+    }
+
+    private fun bufferObservable() {
+        Observable
+            .fromIterable(taskList)
+            .buffer(2)
+            .subscribeOn(Schedulers.io()) //run on background thread.
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<List<Task>> {
+                override fun onNext(list: List<Task>) {
+                    for (task in list) {
+                        adapter.addItem(task.toString())
+                    }
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    disposable.add(d)
+                }
+
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+
+            })
     }
 
     private fun setOnClickListener(view: View, buttonIds: List<Int>) {

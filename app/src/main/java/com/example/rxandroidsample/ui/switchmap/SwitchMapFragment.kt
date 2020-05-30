@@ -28,7 +28,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class SwitchMapFragment : Fragment(), SwitchMapRecyclerAdapter.OnPostClickListener {
+class SwitchMapFragment : Fragment(), SwitchMapAdapter.OnPostClickListener {
 
     val TAG = "SwitchMapPostActivity"
 
@@ -37,7 +37,7 @@ class SwitchMapFragment : Fragment(), SwitchMapRecyclerAdapter.OnPostClickListen
     lateinit var progressBar: ProgressBar
 
     //vars
-    lateinit var adapter: SwitchMapRecyclerAdapter
+    lateinit var adapter: SwitchMapAdapter
     val compositeDisposable = CompositeDisposable()
     private val publishSubject = PublishSubject.create<Post>()
     val PERIOD = 100
@@ -142,7 +142,7 @@ class SwitchMapFragment : Fragment(), SwitchMapRecyclerAdapter.OnPostClickListen
 
 
     private fun initRecyclerView() {
-        adapter = SwitchMapRecyclerAdapter(this)
+        adapter = SwitchMapAdapter(this)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.addItemDecoration(VerticalSpaceItemDecoration(15))
         recyclerView.adapter = adapter

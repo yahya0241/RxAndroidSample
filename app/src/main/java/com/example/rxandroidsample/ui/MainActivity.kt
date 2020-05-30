@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import com.example.rxandroidsample.DataSource
 import com.example.rxandroidsample.R
 import com.example.rxandroidsample.model.Task
 import com.google.android.material.navigation.NavigationView
@@ -34,7 +35,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         initNavigationView()
 
-//        filterList()
 //        createFlowable()
 //        createSingleObservable()
 //        justObservableTest()
@@ -85,6 +85,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 if (isValidDestination(R.id.nav_filter)) {
                     Navigation.findNavController(this, R.id.nav_host_fragment)
                         .navigate(R.id.filterScreen)
+                }
+            }
+            R.id.nav_observable->{
+                if(isValidDestination(R.id.nav_observable)){
+                    Navigation.findNavController(this, R.id.nav_host_fragment)
+                        .navigate(R.id.observableScreen)
                 }
             }
         }
@@ -240,23 +246,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun createSingleObservable() {
-        val task =
-            Task("Walk the dog", false, 4)
 
         val singleTaskObservable = Observable.create(
             ObservableOnSubscribe<Task> { emitter ->
                 // Inside the subscribe method iterate through the list of tasks and call onNext(task)
                 //list can have at most ten member
-                /* for (task in DataSource.createTaskList()) {
+                 for (task in DataSource().getTaskList()) {
                      if (!emitter.isDisposed) {
-                         emitter.onNext(task!!)
+                         emitter.onNext(task)
                      }
-                 }*/
+                 }
 
-                if (!emitter.isDisposed) {
+                /*if (!emitter.isDisposed) {
                     emitter.onNext(task)
                     emitter.onComplete()
-                }
+                }*/
             }
         )
             .subscribeOn(Schedulers.io())
@@ -270,7 +274,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             override fun onNext(t: Task) {
-                Log.d(TAG, "onNext: single task: " + task.description)
+                Log.d(TAG, "onNext: single task: " + t.description)
             }
 
             override fun onError(e: Throwable) {

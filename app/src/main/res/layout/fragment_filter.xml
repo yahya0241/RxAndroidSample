@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.filter.FilterFragment">
+    <Button
+        android:id="@+id/tasks_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tasks_txt"
+        tools:ignore="ButtonStyle" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,8 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/buffer_task"
-            tools:ignore="ButtonStyle"
-            android:onClick="onClick"/>
+            tools:ignore="ButtonStyle"/>
     </LinearLayout>
 
 

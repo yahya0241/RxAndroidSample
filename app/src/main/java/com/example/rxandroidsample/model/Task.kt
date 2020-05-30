@@ -3,7 +3,7 @@ package com.example.rxandroidsample.model
 import org.json.JSONObject
 
 
-class Task(var description: String, var isComplete: Boolean, var priority: Int) {
+class Task(var taskId: Int, var description: String, var isComplete: Boolean, var priority: Int) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -13,6 +13,7 @@ class Task(var description: String, var isComplete: Boolean, var priority: Int) 
         if (description != other.description) return false
         if (isComplete != other.isComplete) return false
         if (priority != other.priority) return false
+        if (taskId != other.taskId) return false
 
         return true
     }
@@ -25,10 +26,11 @@ class Task(var description: String, var isComplete: Boolean, var priority: Int) 
     }
 
     override fun toString(): String {
-        val jObjectData = JSONObject()
-        jObjectData.put("description", description)
-        jObjectData.put("isComplete", isComplete)
-        jObjectData.put("priority", priority)
-        return jObjectData.toString(2)
+        val json = JSONObject()
+        json.put("taskId", taskId)
+        json.put("isComplete", isComplete)
+        json.put("priority", priority)
+        json.put("description", description)
+        return json.toString(2)
     }
 }

@@ -9,8 +9,8 @@ import com.example.rxandroidsample.R
 import com.example.rxandroidsample.model.Post
 import java.util.*
 
-class SwitchMapRecyclerAdapter(onPostClickListener: OnPostClickListener) :
-    RecyclerView.Adapter<SwitchMapRecyclerAdapter.SwitchMapViewHolder>() {
+class SwitchMapAdapter(onPostClickListener: OnPostClickListener) :
+    RecyclerView.Adapter<SwitchMapAdapter.SwitchMapViewHolder>() {
     private var posts = ArrayList<Post>()
     var onPostClickListener : OnPostClickListener = onPostClickListener
 

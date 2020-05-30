@@ -21,4 +21,12 @@
     <string name="take_while">takeWhile</string>
     <string name="map">map</string>
     <string name="buffer_task">buffer</string>
+    <string name="timer_txt">Timer</string>
+    <string name="interval_txt">Interval</string>
+    <string name="just_txt">Just</string>
+    <string name="create_txt">Create</string>
+    <string name="range_txt">Range</string>
+    <string name="flowable_txt">Flowable</string>
+    <string name="observable">Observable</string>
+    <string name="tasks_txt">Show all tasks</string>
 </resources>
