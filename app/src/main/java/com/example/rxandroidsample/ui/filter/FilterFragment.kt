@@ -23,7 +23,6 @@ import io.reactivex.schedulers.Schedulers
 
 class FilterFragment : Fragment(), View.OnClickListener {
 
-    private var taskObservable: Observable<Task>? = null
     lateinit var listView: RecyclerView
     lateinit var adapter: FilterAdapter
     val disposable = CompositeDisposable()
@@ -57,7 +56,7 @@ class FilterFragment : Fragment(), View.OnClickListener {
         listView.adapter = adapter
         listView.layoutManager = LinearLayoutManager(activity!!)
         listView.addItemDecoration(VerticalSpaceItemDecoration(15))
-
+        view?.findViewById<Button>(R.id.tasks_btn)?.let { onClick(it) }
     }
 
 
@@ -71,8 +70,10 @@ class FilterFragment : Fragment(), View.OnClickListener {
 
             }
             R.id.filter_btn -> {
-                adapter.addItem("With filter() method you can filter task items based on features or other condition." +
-                        "we filter tasks if isComplete feature is true.")
+                adapter.addItem(
+                    "With filter() method you can filter task items based on features or other condition." +
+                            "we filter tasks if isComplete feature is true."
+                )
 
                 filterObservable()
             }
@@ -104,7 +105,7 @@ class FilterFragment : Fragment(), View.OnClickListener {
     private fun allTaskObservable() {
         Observable
             .fromIterable(taskList)
-            .subscribeOn(Schedulers.io()) //run on background thread.
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Task> {
                 override fun onNext(task: Task) {
@@ -240,7 +241,7 @@ class FilterFragment : Fragment(), View.OnClickListener {
         Observable
             .fromIterable(taskList)
             .buffer(2)
-            .subscribeOn(Schedulers.io()) //run on background thread.
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<List<Task>> {
                 override fun onNext(list: List<Task>) {

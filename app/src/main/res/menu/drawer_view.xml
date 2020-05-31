@@ -2,23 +2,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_flatMap"
-            android:title="@string/flat_map" />
+            android:id="@+id/nav_filter"
+            android:title="@string/filter" />
         <item
-            android:id="@+id/nav_switchMap"
-            android:title="@string/switch_map" />
+            android:id="@+id/nav_observable"
+            android:title="@string/observable" />
+
+        <item
+            android:id="@+id/nav_livedata"
+            android:title="@string/liveData" />
 
         <item
             android:id="@+id/nav_search"
-            android:title="@string/search_label"
-            />
-        <item android:id="@+id/nav_livedata"
-            android:title="@string/liveData"/>
+            android:title="@string/search_label" />
 
-        <item android:id="@+id/nav_buffers"
-            android:title="@string/Buffer"/>
+        <item
+            android:id="@+id/nav_buffers"
+            android:title="@string/Buffer" />
 
-        <item android:id="@+id/nav_filter"
-            android:title="@string/filter"/>
+        <item
+            android:id="@+id/nav_switchMap"
+            android:title="@string/switch_map" />
+        <item
+            android:id="@+id/nav_flatMap"
+            android:title="@string/flat_map" />
+
+        <item
+            android:id="@+id/nav_concatMap"
+            android:title="@string/concat_map" />
+
+        <item
+            android:id="@+id/nav_continue"
+            android:title="@string/continue_txt" />
+
     </group>
 </menu>

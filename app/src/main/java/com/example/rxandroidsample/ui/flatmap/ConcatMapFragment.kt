@@ -1,6 +1,7 @@
 package com.example.rxandroidsample.ui.flatmap
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,8 @@ import java.util.*
 import kotlin.random.Random
 
 
-class FlatMapFragment : Fragment() {
+class ConcatMapFragment : Fragment() {
+    private val TAG = "PostActivity"
 
     lateinit var recyclerView: RecyclerView
     private val disposable = CompositeDisposable()
@@ -42,10 +44,15 @@ class FlatMapFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recycler_view)
         initRecyclerView()
+
+        fetchData()
+    }
+
+    private fun fetchData() {
         getPostObservables()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap(object : Function<Post, ObservableSource<Post>> {
+            .concatMap(object : Function<Post, ObservableSource<Post>> {
                 override fun apply(post: Post): ObservableSource<Post> {
                     return getCommentObservable(post)
                 }
@@ -61,6 +68,7 @@ class FlatMapFragment : Fragment() {
                 }
 
                 override fun onError(e: Throwable) {
+                    Log.e(TAG, "onError: ", e)
                 }
 
                 override fun onComplete() {
@@ -76,12 +84,12 @@ class FlatMapFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .flatMap(object : Function<List<Post>, ObservableSource<Post>> {
                 override fun apply(posts: List<Post>): ObservableSource<Post> {
-                    recyclerAdapter.setPosts(posts as ArrayList<Post>);
+                    recyclerAdapter.setPosts(posts as ArrayList<Post>)
                     recyclerAdapter.notifyDataSetChanged()
                     return Observable.fromIterable(posts)
-                        .subscribeOn(Schedulers.io());
+                        .subscribeOn(Schedulers.io())
                 }
-            });
+            })
 
     }
 
@@ -99,12 +107,13 @@ class FlatMapFragment : Fragment() {
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+
     }
 
 
     private fun updatePost(post: Post) {
         if (!recyclerView.isComputingLayout) {
-            recyclerAdapter.updatePost(post);
+            recyclerAdapter.updatePost(post)
         }
     }
 

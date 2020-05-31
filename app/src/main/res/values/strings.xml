@@ -6,10 +6,13 @@
     <string name="get_posts">get posts</string>
     <string name="title_t">this is a title</string>
     <string name="fragment_flat_map">Flat Map</string>
+    <string name="fragment_concat_map">Concat Map</string>
     <string name="fragment_switch">Switch Map</string>
     <string name="flat_map">Flat Map</string>
+    <string name="concat_map">Concat Map</string>
     <string name="switch_map">Switch Map</string>
     <string name="search_label">Debounce</string>
+    <string name="continue_txt">To be continue…</string>
     <string name="liveData_reactiveStream">download data with reactive stream and handel with live date</string>
     <string name="liveData_future">download data with Future class and handel result with live data</string>
     <string name="liveData">Future &amp; ReactiveStream</string>
@@ -21,12 +24,12 @@
     <string name="take_while">takeWhile</string>
     <string name="map">map</string>
     <string name="buffer_task">buffer</string>
-    <string name="timer_txt">Timer</string>
+    <string name="delay_txt">Delay</string>
     <string name="interval_txt">Interval</string>
     <string name="just_txt">Just</string>
-    <string name="create_txt">Create</string>
-    <string name="range_txt">Range</string>
-    <string name="flowable_txt">Flowable</string>
+    <string name="create_txt">Create Observable</string>
+    <string name="range_txt">Range &amp; Repeat</string>
+    <string name="flowable_txt">Create Flowable</string>
     <string name="observable">Observable</string>
     <string name="tasks_txt">Show all tasks</string>
 </resources>

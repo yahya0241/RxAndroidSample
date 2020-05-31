@@ -14,7 +14,6 @@ import java.util.*
 
 class FlatMapRecyclerAdapter : RecyclerView.Adapter<FlatMapRecyclerAdapter.MyViewHolder>() {
 
-    private val TAG = "RecyclerAdapter"
     private var posts = ArrayList<Post>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

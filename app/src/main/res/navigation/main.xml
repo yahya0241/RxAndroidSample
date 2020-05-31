@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    app:startDestination="@+id/flatScreen">
+    app:startDestination="@+id/filterScreen">
 
     <fragment
         android:id="@+id/flatScreen"
         android:name="com.example.rxandroidsample.ui.flatmap.FlatMapFragment"
         android:label="@string/fragment_flat_map"
-        tools:layout="@layout/fragment_flatmap"
-        />
+        tools:layout="@layout/fragment_flatmap" />
+    <fragment
+        android:id="@+id/concatMapScreen"
+        android:name="com.example.rxandroidsample.ui.flatmap.ConcatMapFragment"
+        android:label="@string/fragment_concat_map"
+        tools:layout="@layout/fragment_flatmap" />
     <fragment
         android:id="@+id/switchScreen"
         android:name="com.example.rxandroidsample.ui.switchmap.SwitchMapFragment"
         android:label="@string/fragment_switch"
-        tools:layout="@layout/fragment_switchmap"
-        />
+        tools:layout="@layout/fragment_switchmap" />
 
     <fragment
         android:id="@+id/searchScreen"
-        android:name="com.example.rxandroidsample.ui.search.SearchFragment"
-        tools:layout="@layout/fragment_search"
+        android:name="com.example.rxandroidsample.ui.debounce.DebounceFragment"
         android:label="@string/search_label"
-        />
+        tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/liveDataScreen"
         android:name="com.example.rxandroidsample.ui.livedata.LiveDataFragment"
-        tools:layout="@layout/fragment_livedata"
         android:label="@string/liveData_label"
-        />
+        tools:layout="@layout/fragment_livedata" />
 
     <fragment
         android:id="@+id/buffersScreen"
         android:name="com.example.rxandroidsample.ui.buffer.FragmentBuffers"
-        tools:layout="@layout/fragment_buttons"
-        android:label="@string/Buffer"/>
+        android:label="@string/Buffer"
+        tools:layout="@layout/fragment_buttons" />
 
-    <fragment android:id="@+id/filterScreen"
+    <fragment
+        android:id="@+id/filterScreen"
         android:name="com.example.rxandroidsample.ui.filter.FilterFragment"
-        tools:layout="@layout/frament_filter"
-        android:label="@string/filter"/>
+        android:label="@string/filter"
+        tools:layout="@layout/fragment_filter" />
+    <fragment
+        android:id="@+id/observableScreen"
+        android:name="com.example.rxandroidsample.ui.observable.ObservableSample"
+        android:label="@string/observable"
+        tools:layout="@layout/fragment_observable" />
 
 </navigation>
