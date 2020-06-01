@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 
-class ObservableSample : Fragment(), View.OnClickListener {
+class ObservableSampleFragment : Fragment(), View.OnClickListener {
 
     lateinit var listView: RecyclerView
     lateinit var adapter: FilterAdapter
@@ -46,6 +46,7 @@ class ObservableSample : Fragment(), View.OnClickListener {
         listView = view.findViewById(R.id.filter_listView)
         initListView()
         val buttons = listOf(
+            R.id.tasks_btn_observable,
             R.id.delay_btn,
             R.id.interval_btn,
             R.id.just_btn,
@@ -59,6 +60,11 @@ class ObservableSample : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         adapter.clearData()
         when (v!!.id) {
+            R.id.tasks_btn_observable -> {
+                adapter.addItem("This list contain all tasks, we apply above option on them.")
+                allTaskObservable()
+
+            }
             R.id.delay_btn -> {
                 adapter.addItem(
                     "The Delay operator creates an Observable that start emitting items" +
@@ -100,6 +106,25 @@ class ObservableSample : Fragment(), View.OnClickListener {
             }
 
         }
+    }
+
+    private fun allTaskObservable() {
+        Observable
+            .fromIterable(taskList)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Task> {
+                override fun onNext(task: Task) {
+                    adapter.addItem(task.toString())
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    disposable.add(d)
+                }
+
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {}
+            })
     }
 
     private fun delayObservable() {
@@ -270,7 +295,7 @@ class ObservableSample : Fragment(), View.OnClickListener {
         listView.adapter = adapter
         listView.layoutManager = LinearLayoutManager(activity!!)
         listView.addItemDecoration(VerticalSpaceItemDecoration(15))
-
+        view?.findViewById<Button>(R.id.tasks_btn_observable)?.let { onClick(it) }
     }
 
     private fun setOnClickListener(view: View, buttonIds: List<Int>) {

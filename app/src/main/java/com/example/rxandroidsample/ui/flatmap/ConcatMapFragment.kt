@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +44,8 @@ class ConcatMapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.recycler_view)
+        val explainTextView = view.findViewById<TextView>(R.id.map_explain)
+        explainTextView.text = getString(R.string.concat_map_explain)
         initRecyclerView()
 
         fetchData()

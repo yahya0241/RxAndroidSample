@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import com.example.rxandroidsample.model.Post
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import java.util.concurrent.Callable
@@ -23,20 +24,28 @@ class Repository {
         }
     }
 
-    fun makeReactiveQuery():LiveData<ResponseBody>{
-        return LiveDataReactiveStreams.fromPublisher(ServiceGen.getRequestApi()!!.makeQuery().subscribeOn(Schedulers.io()))
+    fun makeReactiveQuery(): LiveData<ResponseBody> {
+        return LiveDataReactiveStreams.fromPublisher(
+            ServiceGen.getRequestApi()!!.makeQuery().observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+        )
     }
-    fun getUsers():Observable<ResponseBody>{
+
+    fun getUsers(): Observable<ResponseBody> {
         return ServiceGen.getRequestApi()!!.getUsers().subscribeOn(Schedulers.io())
     }
-    fun getPost(id:Int):Observable<Post>{
+
+    fun getPost(id: Int): Observable<Post> {
         return ServiceGen.getRequestApi()!!.getPost(id).subscribeOn(Schedulers.io())
     }
+
     fun makeFutureQuery(): Future<Observable<ResponseBody>> {
         val executor = Executors.newSingleThreadExecutor()
 
         val myNetworkCallable: Callable<Observable<ResponseBody>> =
-            Callable<Observable<ResponseBody>> { ServiceGen.getRequestApi()!!.makeObservableQuery() }
+            Callable<Observable<ResponseBody>> {
+                ServiceGen.getRequestApi()!!.makeObservableQuery()
+            }
 
 
         return object : Future<Observable<ResponseBody>> {

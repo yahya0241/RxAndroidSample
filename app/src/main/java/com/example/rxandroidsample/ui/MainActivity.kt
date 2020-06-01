@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_continue -> {
                 Toast.makeText(this, "New operator will be add :))", Toast.LENGTH_SHORT).show()
+
             }
         }
 
@@ -138,4 +139,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onDestroy()
         disposable.clear()
     }
+
 }

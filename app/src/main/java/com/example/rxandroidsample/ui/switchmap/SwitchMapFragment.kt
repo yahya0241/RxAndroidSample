@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,6 +55,9 @@ class SwitchMapFragment : Fragment(), SwitchMapAdapter.OnPostClickListener {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recycler_view_switch_map)
         progressBar = view.findViewById(R.id.switch_map_pb)
+
+        val explainTextView = view.findViewById<TextView>(R.id.switch_map_explain)
+        explainTextView.text = getString(R.string.switch_map_explain)
 
         initRecyclerView()
         retrievePosts()
@@ -129,12 +133,11 @@ class SwitchMapFragment : Fragment(), SwitchMapAdapter.OnPostClickListener {
                 }
 
                 override fun onNext(post: Post) {
-                    Log.d(TAG, "onNext: done.");
-                    navDialogView(post)
+                    navDialogView(post.toString())
                 }
 
                 override fun onError(e: Throwable) {
-                    Log.e(TAG, "onError: ", e);
+                    navDialogView(e.message.toString())
                 }
 
             })
@@ -148,11 +151,11 @@ class SwitchMapFragment : Fragment(), SwitchMapAdapter.OnPostClickListener {
         recyclerView.adapter = adapter
     }
 
-    fun navDialogView(post: Post) {
+    fun navDialogView(text: String) {
         val dialogBuilder = AlertDialog.Builder(activity!!)
 
-        dialogBuilder.setTitle(post.id.toString())
-        dialogBuilder.setMessage(post.title.toString())
+        dialogBuilder.setTitle("title")
+        dialogBuilder.setMessage(text)
         dialogBuilder.setPositiveButton("OK") { dialog, whichButton ->
             dialog.dismiss()
             progressBar.progress = 0

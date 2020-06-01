@@ -32,4 +32,13 @@
     <string name="flowable_txt">Create Flowable</string>
     <string name="observable">Observable</string>
     <string name="tasks_txt">Show all tasks</string>
+    <string name="buffer_explain_txt">Returns an Observable that emits buffers of items it collects from the source ObservableSource. here we buffer your click in 4 second.</string>
+    <string name="throttle_explain_txt">"Returns an Observable that emits only the first item emitted by the source ObservableSource during sequential time windows of a specified duration. here we just emit your first click on button in 5 second. in 5 second all click after first one will be reject."</string>
+    <string name="debounce_explain_txt">Returns an Observable that mirrors the source ObservableSource,
+        except that it drops items emitted by the source ObservableSource that are followed by another item within a computed debounce duration.
+        here we debounce your typing change during 5 second. if you stop typing 5 second after that if there is emitted item, querying the server.</string>
+    <string name="switch_map_explain">SwitchMap() will transform items emitted by an Observable into an Observable just like ConcatMap() and FlatMap(). The difference being that it will unsubscribe previous observers once a new Observer has subscribed.
+        Essentially this solves a limitation that both ConcatMap() and FlatMap() have. </string>
+    <string name="concat_map_explain">Transform the item(s) emitted by an Observable into Observables, then flatten the emissions from those into a single Observable. This operator is essentially the same as the Flatmap operator, but it emits the object(s) while maintaining order.</string>
+    <string name="flat_map_explian">Transform the item(s) emitted by an Observable into Observables, then flatten the emissions from those into a single Observable. If you\'re familiar with LiveData, MediatorLiveData can do something very similar.</string>
 </resources>

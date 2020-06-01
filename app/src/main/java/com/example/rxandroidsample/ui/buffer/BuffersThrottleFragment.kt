@@ -1,6 +1,7 @@
 package com.example.rxandroidsample.ui.buffer
 
 import android.os.Bundle
+import android.text.Layout
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function
 import java.util.concurrent.TimeUnit
 
-class FragmentBuffers : Fragment() {
+
+class BuffersThrottleFragment : Fragment() {
 
     private lateinit var bufferTextView: TextView
     private lateinit var throttleTextView: TextView
@@ -28,13 +30,18 @@ class FragmentBuffers : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_buttons, container, false)
+        return inflater.inflate(R.layout.fragment_buffer_throttle, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val bufferButton = view.findViewById<Button>(R.id.buffer_button)
         val throttleButton = view.findViewById<Button>(R.id.throttle_button)
+
+        val bufferExplainTxtView = view.findViewById<TextView>(R.id.buffer_explain)
+        bufferExplainTxtView.text = getString(R.string.buffer_explain_txt)
+        val throttleExplainTxtView = view.findViewById<TextView>(R.id.throttle_explain)
+        throttleExplainTxtView.text = getString(R.string.throttle_explain_txt)
 
         bufferTextView = view.findViewById(R.id.buffer_textView)
         throttleTextView = view.findViewById(R.id.throttle_textView)
@@ -61,7 +68,7 @@ class FragmentBuffers : Fragment() {
                 }
 
                 override fun onNext(t: List<Int>) {
-                    bufferTextView.append(" You clicked ${t.size} times in 4 sec\n")
+                    appendTextAndScroll(bufferTextView, " You clicked ${t.size} times in 4 sec")
                 }
 
                 override fun onError(e: Throwable) {}
@@ -74,7 +81,7 @@ class FragmentBuffers : Fragment() {
         var timeSinceLastRequest = System.currentTimeMillis()
         throttleBtn.clicks()
             .observeOn(AndroidSchedulers.mainThread())
-            .throttleFirst(4000, TimeUnit.MILLISECONDS)
+            .throttleFirst(5, TimeUnit.SECONDS)
             .subscribe(object : Observer<Unit> {
                 override fun onComplete() {
 
@@ -87,7 +94,10 @@ class FragmentBuffers : Fragment() {
                 override fun onNext(t: Unit) {
                     val diffTime = System.currentTimeMillis() - timeSinceLastRequest
                     timeSinceLastRequest = System.currentTimeMillis()
-                    throttleTextView.append(" time since last clicked: ${diffTime / 1000} sec \n")
+                    appendTextAndScroll(
+                        throttleTextView,
+                        "first click in 5 sec happened. time since last clicked: ${diffTime / 1000} sec"
+                    )
                 }
 
                 override fun onError(e: Throwable) {
@@ -101,4 +111,11 @@ class FragmentBuffers : Fragment() {
         disposable.clear()
     }
 
+    private fun appendTextAndScroll(textView: TextView, text: String) {
+        textView.append("$text\n")
+        val layout: Layout = textView.layout
+        val scrollDelta: Int = (layout.getLineBottom(textView.lineCount - 1)
+                - textView.scrollY - textView.height)
+        if (scrollDelta > 0) textView.scrollBy(0, scrollDelta)
+    }
 }

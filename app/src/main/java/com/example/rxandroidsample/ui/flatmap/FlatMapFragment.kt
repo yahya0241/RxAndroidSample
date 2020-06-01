@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +43,10 @@ class FlatMapFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recycler_view)
         initRecyclerView()
+
+        val explainTextView = view.findViewById<TextView>(R.id.map_explain)
+        explainTextView.text = getString(R.string.flat_map_explian)
+
         getPostObservables()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

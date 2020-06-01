@@ -6,11 +6,18 @@
     android:orientation="vertical"
     tools:context=".ui.filter.FilterFragment">
 
+    <Button
+        android:id="@+id/tasks_btn_observable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tasks_txt"
+        tools:ignore="ButtonStyle" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:orientation="horizontal">
 
         <Button
@@ -43,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="3dp"
         android:orientation="horizontal">
 
         <Button
@@ -76,5 +83,5 @@
         android:id="@+id/filter_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="11dp" />
+        android:layout_marginTop="5dp" />
 </LinearLayout>

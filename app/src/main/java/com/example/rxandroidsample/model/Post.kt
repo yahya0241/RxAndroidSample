@@ -3,8 +3,7 @@ package com.example.rxandroidsample.model
 import com.google.gson.annotations.Expose
 
 import com.google.gson.annotations.SerializedName
-
-
+import org.json.JSONObject
 
 
 class Post {
@@ -43,6 +42,12 @@ class Post {
     }
 
     override fun toString(): String {
-        return "Post(userId=$userId, id=$id, title=$title, body=$body, comments=$comments)"
+        val json = JSONObject()
+        json.put("userId", userId)
+        json.put("id", id)
+        json.put("title", title)
+        json.put("body", body)
+        json.put("comments", comments)
+        return json.toString(2)
     }
 }

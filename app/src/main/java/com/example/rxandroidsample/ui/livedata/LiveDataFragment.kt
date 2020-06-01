@@ -1,7 +1,6 @@
 package com.example.rxandroidsample.ui.livedata
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import com.example.rxandroidsample.R
 import com.example.rxandroidsample.viewmodels.MainViewModel
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
@@ -19,10 +19,10 @@ import java.io.IOException
 import java.util.concurrent.ExecutionException
 
 class LiveDataFragment : Fragment() {
-    val TAG = "FragmentLiveData"
 
     lateinit var reactiveTextView: TextView
     lateinit var futureTextView: TextView
+    val disposable = CompositeDisposable()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,11 +48,10 @@ class LiveDataFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Observer<ResponseBody> {
                     override fun onComplete() {
-                        Log.d(TAG, "onComplete: called!")
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                        Log.e(TAG, "onSubscribe: called!")
+                        disposable.add(d)
                     }
 
                     override fun onNext(responseBody: ResponseBody) {
@@ -61,8 +60,7 @@ class LiveDataFragment : Fragment() {
                     }
 
                     override fun onError(e: Throwable) {
-                        Log.e(TAG, "OnError: called!")
-
+                        futureTextView.text = e.toString()
                     }
                 })
         } catch (e: ExecutionException) {
@@ -74,16 +72,21 @@ class LiveDataFragment : Fragment() {
 
     private fun observeRemoteDataWithReactiveStream(viewModel: MainViewModel) {
         viewModel.makeQuery().observe(activity!!,
-            androidx.lifecycle.Observer { responseBody ->
-                Log.d(TAG, "onChanged: this is a live data response!")
-                try {
-                    reactiveTextView.text = responseBody.string()
-                    Log.d(TAG, "onChanged: " + responseBody.string())
-                } catch (e: IOException) {
-                    e.printStackTrace()
+            object : androidx.lifecycle.Observer<ResponseBody> {
+                override fun onChanged(responseBody: ResponseBody) {
+                    try {
+                        reactiveTextView.text = responseBody.string()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
                 }
             })
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
     }
 
 }

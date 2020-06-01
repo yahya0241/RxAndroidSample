@@ -25,7 +25,7 @@
         android:id="@+id/searchScreen"
         android:name="com.example.rxandroidsample.ui.debounce.DebounceFragment"
         android:label="@string/search_label"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_debounce" />
     <fragment
         android:id="@+id/liveDataScreen"
         android:name="com.example.rxandroidsample.ui.livedata.LiveDataFragment"
@@ -34,9 +34,9 @@
 
     <fragment
         android:id="@+id/buffersScreen"
-        android:name="com.example.rxandroidsample.ui.buffer.FragmentBuffers"
+        android:name="com.example.rxandroidsample.ui.buffer.BuffersThrottleFragment"
         android:label="@string/Buffer"
-        tools:layout="@layout/fragment_buttons" />
+        tools:layout="@layout/fragment_buffer_throttle" />
 
     <fragment
         android:id="@+id/filterScreen"
@@ -45,7 +45,7 @@
         tools:layout="@layout/fragment_filter" />
     <fragment
         android:id="@+id/observableScreen"
-        android:name="com.example.rxandroidsample.ui.observable.ObservableSample"
+        android:name="com.example.rxandroidsample.ui.observable.ObservableSampleFragment"
         android:label="@string/observable"
         tools:layout="@layout/fragment_observable" />
 
